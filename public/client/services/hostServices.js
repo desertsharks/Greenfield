@@ -11,15 +11,15 @@ angular.module('tokki')
   // Sends a request for a new session.
   // Receives the sessionID of that session.
 
-  var startSession = function(cb) {
+  var startSession = function(cb, trial) {
     return $http({
       method: 'POST',
-      url: session.url + '/new'
+      url: session.url + '/new' + trial ? 'Trial' : ''
     })
     .then(function(resp) {
       session.id = resp.data;
       cb(resp.data);
-    });
+    })
   };
 
   // Initiates socket connection

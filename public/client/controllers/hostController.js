@@ -12,20 +12,25 @@ angular.module('tokki')
   }, 1000);
 
   // Opens a new session
-  $scope.startSession = function() {
-
+  $scope.startSession = function(trial) {
+    console.log('trial?', trial);
     HostServices.startSession( function(newSessionId) {
-      console.log('now listening for votes on session: ' + newSessionId);
-      $scope.sessionId = newSessionId;
+      console.log('in here');
+      if (newSessionId) {
+        console.log('now listening for votes on session: ' + newSessionId);
+        $scope.sessionId = newSessionId;
 
-      HostServices.listen( function(sessionData) {
-        $scope.userCount = sessionData.userCount || 0;
-        $scope.currAvg = (sessionData.currentAverage || 0).toFixed(2);
-        $scope.hisAvg = (sessionData.historicalAverage || 0).toFixed(2);
-        $scope.$apply();
-      });
+        HostServices.listen( function(sessionData) {
+          $scope.userCount = sessionData.userCount || 0;
+          $scope.currAvg = (sessionData.currentAverage || 0).toFixed(2);
+          $scope.hisAvg = (sessionData.historicalAverage || 0).toFixed(2);
+          $scope.$apply();
+        });
+      } else if (!trial) {
+        $scope.startSession(true);
+      }
 
-    });
+    }, trial);
   };
 
   // Ends a session
